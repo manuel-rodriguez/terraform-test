@@ -111,3 +111,8 @@ import {
   to = azurerm_api_management_backend.service_backend
   id = "${var.apim_id}/backends/${var.backend_name}"
 }
+
+import {
+  to = azurerm_api_management_api.service_api
+  id = "${var.apim_id}/apis/${var.api_name};rev=1"
+}
