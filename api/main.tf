@@ -30,7 +30,6 @@ resource "azurerm_api_management_api_policy" "api_policy" {
   xml_content = <<XML
 <policies>
   <inbound>
-    <validate-oauth2-token authorization-server="oauth_mers" />
     <cors>
       <allowed-origins>
         <origin>*</origin>
