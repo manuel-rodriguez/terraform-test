@@ -29,21 +29,30 @@ resource "azurerm_api_management_api_policy" "api_policy" {
 
   xml_content = <<XML
 <policies>
-  <inbound>
-    <validate-oauth2-token authorization-server="oauth_mers" />
-    <cors>
-      <allowed-origins>
-        <origin>*</origin>
-      </allowed-origins>
-      <allowed-methods>
-        <method>PUT</method>
-      </allowed-methods>
-      <allowed-headers>
-        <header>*</header>
-      </allowed-headers>
-    </cors>
-    <base />
-  </inbound>
+    <inbound>
+        <base />
+        <validate-oauth2-token authorization-server="oauth_mers" />
+        <cors>
+            <allowed-origins>
+                <origin>*</origin>
+            </allowed-origins>
+            <allowed-methods>
+                <method>PUT</method>
+            </allowed-methods>
+            <allowed-headers>
+                <header>*</header>
+            </allowed-headers>
+        </cors>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
 </policies>
 XML
 }
