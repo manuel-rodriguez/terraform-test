@@ -6,47 +6,32 @@ variable "location" {
   type = string
 }
 
-variable "apim_name" {
-  description = "Name of the API Management service"
+variable "api_name" {
+  description = "Name of the API in APIM"
   type        = string
 }
 
-variable "publisher_name" {
-  description = "Name of the API publisher"
+variable "backend_name" {
+  description = "Name of the backend service in APIM"
   type        = string
 }
 
-variable "publisher_email" {
-  description = "Email of the API publisher"
+variable "backend_service_url" {
+  description = "URL of the backend service"
   type        = string
 }
 
-variable "function_app_url" {
-  description = "Function App URL"
-  type        = string
-}
-
-variable "function_app_key" {
-  description = "Function App key"
-  type        = string
-}
-
-variable "function_backend_name" {
-  description = "Name of the function backend in APIM"
-  type        = string
-}
-
-variable "function_app_name" {
-  description = "Name of the function App Name"
-  type        = string
-}
-
-variable "function_api_name" {
-  description = "Name of the function API Name"
+variable "openapi_spec_path" {
+  description = "Path to the OpenAPI specification file (yml)"
   type        = string
 }
 
 variable "tags" {
   description = "Tags to be applied to the resources"
   type        = map(string)
+}
+
+variable "apim_id" {
+  description = "ID of the existing API Management service"
+  type        = string
 }
