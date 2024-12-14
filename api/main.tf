@@ -7,14 +7,13 @@ resource "azurerm_api_management_api" "service_api" {
   display_name        = var.api_display_name
   path                = var.api_path 
   protocols           = ["https"]
-  description         = "API de Sistema que expone la version 1.0 de los servicios"
   service_url         = var.backend_service_url
   subscription_required = true
   
  
   import {
-    content_format = "swagger-json"
-    content_value  = jsonencode(yamldecode(file(var.openapi_spec_path)))
+    content_format = "openapi"
+    content_value  = file(var.openapi_spec_path)
   }
 }
 
