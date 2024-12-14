@@ -21,7 +21,7 @@ resource "azurerm_api_management_api" "service_api" {
   }
 
   oauth2_authorization {
-    authorization_server_name = "oauth_mers"
+    authorization_server_name = "oauth-mers"
   }
 }
 
