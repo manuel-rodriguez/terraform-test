@@ -25,48 +25,6 @@ resource "azurerm_api_management_api" "service_api" {
   }
 }
 
-# Esperar a que el API se cree completamente
-resource "time_sleep" "wait_30_seconds" {
-  depends_on = [azurerm_api_management_api.service_api]
-  create_duration = "30s"
-}
-
-# Políticas del API
-resource "azurerm_api_management_api_policy" "api_policy" {
-  depends_on = [time_sleep.wait_30_seconds]
-  api_name            = azurerm_api_management_api.service_api.name
-  api_management_name = split("/", var.apim_id)[8]
-  resource_group_name = var.resource_group_name
-
-  xml_content = <<XML
-<policies>
-    <inbound>
-        <base />
-        <validate-oauth2-token authorization-server="oauth_mers" />
-        <cors>
-            <allowed-origins>
-                <origin>*</origin>
-            </allowed-origins>
-            <allowed-methods>
-                <method>PUT</method>
-            </allowed-methods>
-            <allowed-headers>
-                <header>*</header>
-            </allowed-headers>
-        </cors>
-    </inbound>
-    <backend>
-        <base />
-    </backend>
-    <outbound>
-        <base />
-    </outbound>
-    <on-error>
-        <base />
-    </on-error>
-</policies>
-XML
-}
 
 # Backend Configuration 
 resource "azurerm_api_management_backend" "service_backend" {
