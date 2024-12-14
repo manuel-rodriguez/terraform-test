@@ -51,6 +51,11 @@ XML
     create_before_destroy = true
     replace_triggered_by  = [azurerm_api_management_api.service_api]
   }
+
+  # Bloque de migración usando variables
+  provisioner "local-exec" {
+    command = "terraform import azurerm_api_management_api_policy.api_policy '/subscriptions/${split("/", var.apim_id)[2]}/resourceGroups/${var.resource_group_name}/providers/Microsoft.ApiManagement/service/${split("/", var.apim_id)[8]}/apis/${var.api_name}'"
+  }
 }
 
 # Backend Configuration 
