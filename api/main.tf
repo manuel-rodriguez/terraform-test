@@ -30,7 +30,6 @@ resource "azurerm_api_management_api_policy" "api_policy" {
   xml_content = <<XML
 <policies>
   <inbound>
-    <validate-oauth2-token authorization-server="oauth_mers" />
     <cors>
       <allowed-origins>
         <origin>*</origin>
@@ -46,11 +45,6 @@ resource "azurerm_api_management_api_policy" "api_policy" {
   </inbound>
 </policies>
 XML
-
-  lifecycle {
-    create_before_destroy = true
-    replace_triggered_by  = [azurerm_api_management_api.service_api]
-  }
 }
 
 # Backend Configuration 
