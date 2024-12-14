@@ -9,6 +9,7 @@ resource "azurerm_api_management_api" "service_api" {
   protocols           = ["https"]
   subscription_key_parameter_names {
     header = "x-Gateway-APIKey"
+    query  = "subscription-key"
   }
   oauth2_authorization {
     authorization_server_name = "oauth2"
