@@ -1,0 +1,569 @@
+openapi: 3.0.0
+info:
+  title: SYSTEM API SYS_CNT
+  description: |
+    API de Sistema que expone la version 1.0 de los servicios: 
+    1. Enviar puntos potenciales capturados por analistas de expansión BARA de GIS 2 a CNT.
+
+    El servicio cumple con lo siguiente:
+    - **Protocolo**: *HTTPS*
+    - **Seguridad**: *Oauth 2.0*
+    - **Versionamiento**: *Explícito en la URL*
+    - **Formato estándar de Intercambio**: *JSON*
+    - **Estándares de Diseño**: *REST | HTTP | OpenAPI 3.x.x* 
+
+    **Lectura Recomendada**:
+    1. [OpenAPI Documentation](https://swagger.io/specification/)
+    2. [REST Dissertation](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)
+    3. [RFC 7231](https://datatracker.ietf.org/doc/html/rfc7231)
+  version: v1
+servers:
+  - url: 'https://api-dev.oxxo.io/sys-cnt/api/v1'
+    description: DEV
+security:
+  - ApiKeyAuth: []
+  - OAuth2:
+      - read
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-Gateway-APIKey
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://api.oxxo.io/invoke/pub.apigateway.oauth2/getAccessToken'
+          scopes:
+            read: Grants read access
+paths:
+  /bit_gis:
+    put:
+      tags:
+        - GIS 2
+      summary: Servicio para el procesamiento de informacion de puntos potenciales capturados.
+      description: Servicio para el procesamiento de informacion de puntos potenciales capturados.
+      operationId: putUpdateFeaturesProcessing
+      parameters:
+        - in: header
+          name: Tracking-Id
+          schema:
+            type: string
+            format: uuid
+            example: 4bd9e9c2-4989-4f21-8398-ad9d19ef0f66
+          required: true
+          example: 4bd9e9c2-4989-4f21-8398-ad9d19ef0f66
+          description: Identificador único utilizado para trazabilidad de la petición.
+        - in: header
+          name: Channel-Id
+          schema:
+            type: string
+            example: WEB
+            pattern: '[A-Z]'
+          required: true
+          example: WEB
+          description: Canal de consumo del servicio. Ejemplos - WEB|MOBILE|APP|POS.
+        - in: header
+          name: Country-Code
+          schema:
+            type: string
+            example: MX
+            pattern: '[A-Z]'
+          required: true
+          example: MX
+          description: País desde donde se ejecuta la petición. Ejemplos - MX|US|CO|CL|BR.
+        - in: header
+          name: Language
+          schema:
+            type: string
+            example: SPA
+          required: true
+          example: SPA
+          description: Lenguaje soportado del contenido. Ejemplo - SPA = Español (Único soportado).
+        - in: header
+          name: User-Agent
+          schema:
+            type: string
+            example: exampleApp/1.0
+          required: true
+          example: exampleApp/1.0 <comments>
+          description: 'Agente de usuario que permite a los servidores y servicios de red identificar la aplicación, sistema operativo, compañía, y/o la versión del user agent (en-US) que hace la invocación. Syntax - product / product-version comment.'
+        - in: header
+          name: Content-Type
+          schema:
+            type: string
+            example: application/json
+          required: true
+          example: application/json
+          description: Indica el tipo de contenido del recurso que se va transmitir por la petición.
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer c5652972-85c8-427c-b30c-b1c149a1ff70
+          required: true
+          example: Bearer c5652972-85c8-427c-b30c-b1c149a1ff70
+          description: Contiene la información para autenticar a un usuario en el sistema y permitirle el acceso a un recurso protegido. Token de Acceso se obtiene mediante la suscripción al API.
+        - in: header
+          name: x-Gateway-APIKey
+          schema:
+            type: string
+            format: uuid
+            example: aacb0ad9-94dc-4dbb-85d5-e03f85fd068c
+          required: true
+          example: aacb0ad9-94dc-4dbb-85d5-e03f85fd068c
+          description: identificador único que sirve para identificar a una aplicación o usuario. API Key se obtiene mediante la suscripción al API.
+      requestBody:
+        description: Cuerpo de petición que contiene los parametros de entrada del punto potencial.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - objectId
+                - locationId
+                - name
+                - propertyNumber
+                - incidentNumber
+                - street
+                - number
+                - neighborhoodId
+                - betweenStreets
+                - city
+                - cityId
+                - state
+                - stateId
+                - postalCode
+                - departmentId
+                - locationCRGIS
+                - ageb
+              properties:
+                objectId:
+                  type: number
+                locationId:
+                  type: number
+                  minLength: 1
+                  maxLength: 6
+                  pattern: '^[0-9]*$'
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 50
+                  pattern: '^[A-Za-z ]*$'
+                  description: Nombre de la operación
+                propertyNumber:
+                  type: string
+                  minLength: 1
+                  maxLength: 15
+                  pattern: '^[0-9]*$'
+                  description: Identificador numérico de la propiedad
+                incidentNumber:
+                  type: number
+                  nullable: false
+                street:
+                  type: string
+                  minLength: 1
+                  maxLength: 500
+                  pattern: '^[A-Za-z0-9 ]*$'
+                  description: Campo que indica el nombre de la calle
+                number:
+                  type: string
+                  minLength: 1
+                  maxLength: 50
+                  pattern: '^[0-9]*$'
+                  description: Campo para el número de calle
+                neighborhoodId:
+                  type: number
+                  minLength: 1
+                  maxLength: 5
+                  pattern: '^[0-9]*$'
+                  description: Identificador del número de colonia
+                betweenStreets:
+                  type: string
+                  minLength: 1
+                  maxLength: 500
+                  pattern: '^[A-Za-z0-9/ ]*$'
+                  description: Campo de que describe entre que calles se encuntra la propiedad
+                city:
+                  type: string
+                  minLength: 1
+                  maxLength: 400
+                  pattern: '^[A-Za-z ]*$'
+                  description: Nombre de la ciudad o municipio
+                cityId:
+                  type: string
+                  minLength: 1
+                  maxLength: 400
+                  pattern: '^[0-9]*$'
+                  description: Identificador numérico de la ciudad
+                state:
+                  type: string
+                  minLength: 1
+                  maxLength: 400
+                  pattern: '^[a-zA-Z ]*$'
+                  description: Estado al que pertenece la propiedad
+                stateId:
+                  type: string
+                  minLength: 1
+                  maxLength: 400
+                  pattern: '^[0-9]*$'
+                  description: Identificador numérico del estado
+                postalCode:
+                  type: string
+                  minLength: 1
+                  maxLength: 400
+                  pattern: '^[0-9]*$'
+                  description: Código Postal del municipio
+                departmentId:
+                  type: string
+                  minLength: 1
+                  maxLength: 400
+                  pattern: '^[0-9A-Z]*$'
+                  description: Identificador alfanumérico del departamento (o Plaza). Es un Campo asignado al consumidor.
+                  nullable: false
+                locationCRGIS:
+                  type: string
+                  minLength: 1
+                  maxLength: 50
+                  pattern: '^[0-9A-Z]*$'
+                latitud:
+                  type: number
+                  format: float
+                  maximum: 1e+38
+                  minimum: -1e+38
+                  multipleOf: 1.e-8
+                  description: Valor de la latitud
+                longitud:
+                  type: number
+                  format: float
+                  maximum: 1e+38
+                  minimum: -1e+38
+                  multipleOf: 1.e-8
+                  description: Valor de la longitud
+                ageb:
+                  type: string
+                  minLength: 1
+                  maxLength: 13
+                  description: Referencia del AGEB
+            example:
+              objectId: 1
+              locationId: 300000
+              name: Prueba chat con Mercedes
+              propertyNumber: '300001'
+              incidentNumber: 300001
+              street: La Calle
+              number: '100'
+              neighborhoodId: 100
+              betweenStreets: Calle 1
+              city: Calle 2
+              cityId: '10001'
+              state: El Estado
+              stateId: '10'
+              postalCode: '10001'
+              departmentId: '10'
+              locationCRGIS: PNT100
+              latitud: -100
+              longitud: 20
+              ageb: '10001'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S200000
+                message: Success
+        '400':
+          description: Unsuccessful requests
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S400112
+                message: The client has issued a malformed or illegal request.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S401000
+                message: The specified token is invalid or has expired
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S403000
+                message: ' Application has been identified but it is currently suspended. Please contact the API Gateway administrator for further details.'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S404000
+                message: Resource * not found
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S405000
+                message: 'Method not allowed : *'
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S415000
+                message: Format * is not supported by the request.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S429000
+                message: Too many requests. please try gain later
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              examples:
+                '500':
+                  value:
+                    code: S500000
+                    message: 'Internal server error has occurred, please try again later.'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S503000
+                message: 'Service not available, please try again later.'
+        '504':
+          description: Gateway Timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    description: Código de Error de la operación.
+                    minLength: 7
+                    maxLength: 7
+                    pattern: '^[XPS0-9]*$'
+                    nullable: false
+                  message:
+                    type: string
+                    description: Descripción de la operación.
+                    minLength: 1
+                    maxLength: 100
+                    pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+                    nullable: false
+              example:
+                code: S504000
+                message: 'Connection timed out, please try again later.'
