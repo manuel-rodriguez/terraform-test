@@ -15,14 +15,26 @@ resource "azurerm_api_management_api" "service_api" {
     query  = "subscription-key"
   }
   
-  oauth2_authorization {
-    authorization_server_name = "oauth_mers"
-  }
-  
   import {
     content_format = "openapi"
     content_value  = file(var.openapi_spec_path)
   }
+}
+
+# OAuth2 Policy
+resource "azurerm_api_management_api_policy" "oauth2_policy" {
+  api_name            = azurerm_api_management_api.service_api.name
+  api_management_name = split("/", var.apim_id)[8]
+  resource_group_name = var.resource_group_name
+
+  xml_content = <<XML
+<policies>
+  <inbound>
+    <validate-oauth2-token authorization-server="oauth_mers" />
+    <base />
+  </inbound>
+</policies>
+XML
 }
 
 # Backend Configuration 
