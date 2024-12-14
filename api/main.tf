@@ -15,7 +15,7 @@ resource "azurerm_api_management_api" "service_api" {
     query  = "subscription-key"
   }
   oauth2_authorization {
-    authorization_server_name = "oauth2"
+    authorization_server_name = "oauth_mers"
   }
   
   import {
