@@ -19,7 +19,7 @@ resource "azurerm_api_management_api" "service_api" {
   }
   
   import {
-    content_format = "openapi-json"
+    content_format = "openapi+json"
     content_value  = jsonencode(yamldecode(file(var.openapi_spec_path)))
   }
 }
