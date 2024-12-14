@@ -21,8 +21,15 @@ resource "azurerm_api_management_api" "service_api" {
   }
 }
 
-# Unified Policy (OAuth2 + CORS)
+# Esperar a que el API se cree completamente
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [azurerm_api_management_api.service_api]
+  create_duration = "30s"
+}
+
+# Políticas del API
 resource "azurerm_api_management_api_policy" "api_policy" {
+  depends_on = [time_sleep.wait_30_seconds]
   api_name            = azurerm_api_management_api.service_api.name
   api_management_name = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
