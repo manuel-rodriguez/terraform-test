@@ -12,10 +12,6 @@ resource "azurerm_api_management_api" "service_api" {
   subscription_required = true
   
  
-  oauth2_authorization {
-    authorization_server_name = "oauth_mers"
-  }
-  
   import {
     content_format = "swagger-json"
     content_value  = jsonencode(yamldecode(file(var.openapi_spec_path)))
