@@ -15,9 +15,6 @@ subscription_key_parameter_names {
     query  = "subscription-key"
   }
 
-oauth2_authorization {
-    authorization_server_name = "oauth_mers"
-  }
  
   import {
     content_format = "openapi"
