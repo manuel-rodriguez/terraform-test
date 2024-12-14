@@ -21,8 +21,8 @@ resource "azurerm_api_management_api" "service_api" {
   }
 }
 
-# OAuth2 Policy
-resource "azurerm_api_management_api_policy" "oauth2_policy" {
+# Unified Policy (OAuth2 + CORS)
+resource "azurerm_api_management_api_policy" "api_policy" {
   api_name            = azurerm_api_management_api.service_api.name
   api_management_name = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
@@ -31,35 +31,6 @@ resource "azurerm_api_management_api_policy" "oauth2_policy" {
 <policies>
   <inbound>
     <validate-oauth2-token authorization-server="oauth_mers" />
-    <base />
-  </inbound>
-</policies>
-XML
-}
-
-# Backend Configuration 
-resource "azurerm_api_management_backend" "service_backend" {
-  name                = var.backend_name
-  resource_group_name = var.resource_group_name
-  api_management_name = split("/", var.apim_id)[8]
-  protocol            = "http"
-  url                = var.backend_service_url
-
-  tls {
-    validate_certificate_chain = true
-    validate_certificate_name  = true
-  }
-}
-
-# CORS Policy
-resource "azurerm_api_management_api_policy" "cors_policy" {
-  api_name            = azurerm_api_management_api.service_api.name
-  api_management_name = split("/", var.apim_id)[8]
-  resource_group_name = var.resource_group_name
-
-  xml_content = <<XML
-<policies>
-  <inbound>
     <cors>
       <allowed-origins>
         <origin>*</origin>
@@ -75,6 +46,25 @@ resource "azurerm_api_management_api_policy" "cors_policy" {
   </inbound>
 </policies>
 XML
+
+  lifecycle {
+    create_before_destroy = true
+    replace_triggered_by  = [azurerm_api_management_api.service_api]
+  }
+}
+
+# Backend Configuration 
+resource "azurerm_api_management_backend" "service_backend" {
+  name                = var.backend_name
+  resource_group_name = var.resource_group_name
+  api_management_name = split("/", var.apim_id)[8]
+  protocol            = "http"
+  url                = var.backend_service_url
+
+  tls {
+    validate_certificate_chain = true
+    validate_certificate_name  = true
+  }
 }
 
 data "azurerm_api_management" "existing" {
