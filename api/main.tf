@@ -28,6 +28,7 @@ resource "azurerm_api_management_api" "service_api" {
 
 # Backend Configuration 
 resource "azurerm_api_management_backend" "service_backend" {
+  count               = length(data.azurerm_api_management_backend.existing_backend) == 0 ? 1 : 0
   name                = var.backend_name
   resource_group_name = var.resource_group_name
   api_management_name = split("/", var.apim_id)[8]
@@ -43,6 +44,19 @@ resource "azurerm_api_management_backend" "service_backend" {
 data "azurerm_api_management" "existing" {
   name                = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
+}
+
+# Check if backend exists
+data "azurerm_api_management_backend" "existing_backend" {
+  count               = try(data.azurerm_api_management_backend.existing_backend.name, "") != "" ? 1 : 0
+  name                = var.backend_name
+  api_management_name = split("/", var.apim_id)[8]
+  resource_group_name = var.resource_group_name
+}
+
+# Use the backend ID dynamically
+locals {
+  backend_id = length(data.azurerm_api_management_backend.existing_backend) > 0 ? data.azurerm_api_management_backend.existing_backend[0].name : azurerm_api_management_backend.service_backend[0].name
 }
 
 # CORS Policy at API level
@@ -82,7 +96,7 @@ resource "azurerm_api_management_api_policy" "cors_policy" {
 XML
 }
 
-# Operation level policy for PUT
+# Operation level policy using dynamic backend_id
 resource "azurerm_api_management_api_operation_policy" "put_operation_policy" {
   api_name            = azurerm_api_management_api.service_api.name
   api_management_name = split("/", var.apim_id)[8]
@@ -90,32 +104,22 @@ resource "azurerm_api_management_api_operation_policy" "put_operation_policy" {
   operation_id        = "putUpdateFeaturesProcessing"
 
   xml_content = <<XML
-<!--
-    - Policies are applied in the order they appear.
-    - Position <base/> inside a section to inherit policies from the outer scope.
-    - Comments within policies are not preserved.
--->
-<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
 <policies>
-    <!-- Throttle, authorize, validate, cache, or transform the requests -->
     <inbound>
         <base />
         <set-header name="Authorization" exists-action="override">
             <value />
         </set-header>
-        <set-backend-service backend-id="cnt" />
+        <set-backend-service backend-id="${local.backend_id}" />
         <rewrite-uri template="/puntopotencial" />
         <set-method>POST</set-method>
     </inbound>
-    <!-- Control if and how the requests are forwarded to services  -->
     <backend>
         <base />
     </backend>
-    <!-- Customize the responses -->
     <outbound>
         <base />
     </outbound>
-    <!-- Handle exceptions and customize error responses  -->
     <on-error>
         <base />
     </on-error>
