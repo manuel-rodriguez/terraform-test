@@ -14,7 +14,7 @@ resource "azurerm_api_management_api" "service_api" {
   }
 }
 
-# Backend Configuration
+# Backend Configuration 
 resource "azurerm_api_management_backend" "service_backend" {
   name                = var.backend_name
   resource_group_name = var.resource_group_name
