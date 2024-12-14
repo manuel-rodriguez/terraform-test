@@ -106,3 +106,8 @@ resource "azurerm_api_management_api_operation_policy" "put_operation_policy" {
 </policies>
 XML
 }
+
+import {
+  to = azurerm_api_management_backend.service_backend
+  id = "${var.apim_id}/backends/${var.backend_name}"
+}
