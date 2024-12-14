@@ -10,13 +10,8 @@ resource "azurerm_api_management_api" "service_api" {
   description         = "API de Sistema que expone la version 1.0 de los servicios"
   service_url         = var.backend_service_url
   subscription_required = true
-  version            = "v1"
-  version_set_id     = null
   
-  subscription_key_parameter_names {
-    header = "x-Gateway-APIKey"
-    query  = "subscription-key"
-  }
+ 
   oauth2_authorization {
     authorization_server_name = "oauth_mers"
   }
