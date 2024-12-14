@@ -9,7 +9,7 @@ resource "azurerm_api_management_api" "service_api" {
   protocols           = ["https"]
   
   import {
-    content_format = "openapi+yaml"
+    content_format = "openapi"
     content_value  = file(var.openapi_spec_path)
   }
 }
