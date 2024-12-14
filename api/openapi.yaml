@@ -18,7 +18,7 @@ info:
     3. [RFC 7231](https://datatracker.ietf.org/doc/html/rfc7231)
   version: v1
 servers:
-  - url: 'https://api-dev.oxxo.io/sys-cnt/api/v1'
+  - url: 'https://apimers.azure-api.net'
     description: DEV
 security:
   - ApiKeyAuth: []
@@ -34,7 +34,7 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: 'https://api.oxxo.io/invoke/pub.apigateway.oauth2/getAccessToken'
+          tokenUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
           scopes:
             read: Grants read access
 paths:
@@ -190,7 +190,7 @@ paths:
                   type: string
                   minLength: 1
                   maxLength: 400
-                  pattern: '^[A-Za-z ]*$'
+                  pattern: '^[A-Za-z0-9 ]*$'
                   description: Nombre de la ciudad o municipio
                 cityId:
                   type: string
@@ -202,7 +202,7 @@ paths:
                   type: string
                   minLength: 1
                   maxLength: 400
-                  pattern: '^[a-zA-Z ]*$'
+                  pattern: '^[A-Za-z0-9 ]*$'
                   description: Estado al que pertenece la propiedad
                 stateId:
                   type: string
@@ -212,14 +212,14 @@ paths:
                   description: Identificador numérico del estado
                 postalCode:
                   type: string
-                  minLength: 1
-                  maxLength: 400
+                  minLength: 5
+                  maxLength: 5
                   pattern: '^[0-9]*$'
                   description: Código Postal del municipio
                 departmentId:
                   type: string
-                  minLength: 1
-                  maxLength: 400
+                  minLength: 5
+                  maxLength: 5
                   pattern: '^[0-9A-Z]*$'
                   description: Identificador alfanumérico del departamento (o Plaza). Es un Campo asignado al consumidor.
                   nullable: false
@@ -250,20 +250,20 @@ paths:
             example:
               objectId: 1
               locationId: 300000
-              name: Prueba chat con Mercedes
+              name: 'Prueba'
               propertyNumber: '300001'
               incidentNumber: 300001
-              street: La Calle
+              street: 'La Calle'
               number: '100'
               neighborhoodId: 100
-              betweenStreets: Calle 1
-              city: Calle 2
+              betweenStreets: 'Calle 1'
+              city: 'Calle 2'
               cityId: '10001'
-              state: El Estado
+              state: 'El Estado'
               stateId: '10'
               postalCode: '10001'
-              departmentId: '10'
-              locationCRGIS: PNT100
+              departmentId: '10MON'
+              locationCRGIS: 'PNT100'
               latitud: -100
               longitud: 20
               ageb: '10001'

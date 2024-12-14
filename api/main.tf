@@ -45,34 +45,77 @@ data "azurerm_api_management" "existing" {
   resource_group_name = var.resource_group_name
 }
 
-# CORS Policy
+# CORS Policy at API level
 resource "azurerm_api_management_api_policy" "cors_policy" {
   api_name            = azurerm_api_management_api.service_api.name
   api_management_name = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
 
   xml_content = <<XML
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
 <policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
     <inbound>
         <base />
-        <cors>
-            <allowed-origins>
-                <origin>*</origin>
-            </allowed-origins>
-            <allowed-methods>
-                <method>PUT</method>
-            </allowed-methods>
-            <allowed-headers>
-                <header>*</header>
-            </allowed-headers>
-        </cors>
+        <validate-content unspecified-content-type-action="prevent" max-size="102400" size-exceeded-action="prevent" errors-variable-name="requestBodyValidation">
+            <content type="application/json" validate-as="json" action="prevent" allow-additional-properties="false" />
+        </validate-content>
     </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
     <backend>
         <base />
     </backend>
+    <!-- Customize the responses -->
     <outbound>
         <base />
     </outbound>
+    <!-- Handle exceptions and customize error responses  -->
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+XML
+}
+
+# Operation level policy for PUT
+resource "azurerm_api_management_api_operation_policy" "put_operation_policy" {
+  api_name            = azurerm_api_management_api.service_api.name
+  api_management_name = split("/", var.apim_id)[8]
+  resource_group_name = var.resource_group_name
+  operation_id        = "putUpdateFeaturesProcessing"
+
+  xml_content = <<XML
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
+<policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
+    <inbound>
+        <base />
+        <set-header name="Authorization" exists-action="override">
+            <value />
+        </set-header>
+        <set-backend-service backend-id="cnt" />
+        <rewrite-uri template="/puntopotencial" />
+        <set-method>POST</set-method>
+    </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
+    <backend>
+        <base />
+    </backend>
+    <!-- Customize the responses -->
+    <outbound>
+        <base />
+    </outbound>
+    <!-- Handle exceptions and customize error responses  -->
     <on-error>
         <base />
     </on-error>
