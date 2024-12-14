@@ -1,3 +1,9 @@
+# Add this at the beginning of your main.tf
+data "azurerm_api_management" "existing" {
+  name                = split("/", var.apim_id)[8]
+  resource_group_name = var.resource_group_name
+}
+
 # API from OpenAPI specification
 resource "azurerm_api_management_api" "service_api" {
   name                = var.api_name
@@ -25,25 +31,7 @@ resource "azurerm_api_management_api" "service_api" {
   }
 }
 
-# Check if backend exists using try/catch
-locals {
-  existing_backend = try(
-    data.azurerm_api_management_backend.existing_backend[0].name,
-    var.backend_name
-  )
-}
-
-# Backend data source
-data "azurerm_api_management_backend" "existing_backend" {
-  count               = 1
-  name                = var.backend_name
-  api_management_name = split("/", var.apim_id)[8]
-  resource_group_name = var.resource_group_name
-
-  depends_on = [azurerm_api_management_backend.service_backend]
-}
-
-# Backend Configuration 
+# Backend Configuration with lifecycle ignore_changes
 resource "azurerm_api_management_backend" "service_backend" {
   name                = var.backend_name
   resource_group_name = var.resource_group_name
@@ -54,6 +42,10 @@ resource "azurerm_api_management_backend" "service_backend" {
   tls {
     validate_certificate_chain = true
     validate_certificate_name  = true
+  }
+
+  lifecycle {
+    ignore_changes = all
   }
 }
 
@@ -84,7 +76,7 @@ resource "azurerm_api_management_api_policy" "cors_policy" {
 XML
 }
 
-# Operation level policy using dynamic backend_id
+# Operation level policy using backend_name directly
 resource "azurerm_api_management_api_operation_policy" "put_operation_policy" {
   api_name            = azurerm_api_management_api.service_api.name
   api_management_name = split("/", var.apim_id)[8]
@@ -98,7 +90,7 @@ resource "azurerm_api_management_api_operation_policy" "put_operation_policy" {
         <set-header name="Authorization" exists-action="override">
             <value />
         </set-header>
-        <set-backend-service backend-id="${local.existing_backend}" />
+        <set-backend-service backend-id="${var.backend_name}" />
         <rewrite-uri template="/puntopotencial" />
         <set-method>POST</set-method>
     </inbound>
