@@ -7,6 +7,12 @@ resource "azurerm_api_management_api" "service_api" {
   display_name        = var.api_display_name
   path                = var.api_path 
   protocols           = ["https"]
+  subscription_key_parameter_names {
+    header = "x-Gateway-APIKey"
+  }
+  oauth2_authorization {
+    authorization_server_name = "oauth2"
+  }
   
   import {
     content_format = "openapi"
