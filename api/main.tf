@@ -107,12 +107,26 @@ resource "azurerm_api_management_api_operation_policy" "put_operation_policy" {
 XML
 }
 
+# Import para el backend
 import {
   to = azurerm_api_management_backend.service_backend
   id = "${var.apim_id}/backends/${var.backend_name}"
 }
 
+# Import para el API
 import {
   to = azurerm_api_management_api.service_api
   id = "${var.apim_id}/apis/${var.api_name};rev=1"
+}
+
+# Import para la política a nivel API
+import {
+  to = azurerm_api_management_api_policy.cors_policy
+  id = "${var.apim_id}/apis/${var.api_name}/policies/policy"
+}
+
+# Import para la política a nivel operación
+import {
+  to = azurerm_api_management_api_operation_policy.put_operation_policy
+  id = "${var.apim_id}/apis/${var.api_name}/operations/putUpdateFeaturesProcessing/policies/policy"
 }
