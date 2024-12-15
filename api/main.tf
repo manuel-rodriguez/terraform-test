@@ -130,3 +130,11 @@ import {
   to = azurerm_api_management_api_operation_policy.put_operation_policy
   id = "${var.apim_id}/apis/${var.api_name}/operations/putUpdateFeaturesProcessing"
 }
+
+# Asociación del API al producto
+resource "azurerm_api_management_product_api" "product_api" {
+  api_name            = azurerm_api_management_api.service_api.name
+  product_id          = var.product_id
+  api_management_name = split("/", var.apim_id)[8]
+  resource_group_name = var.resource_group_name
+}
