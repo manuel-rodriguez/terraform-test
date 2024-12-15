@@ -1,0 +1,20 @@
+<policies>
+    <inbound>
+        <base />
+        <set-header name="Authorization" exists-action="override">
+            <value />
+        </set-header>
+        <set-backend-service backend-id="${backend_name}" />
+        <rewrite-uri template="/puntopotencial" />
+        <set-method>POST</set-method>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

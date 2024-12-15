@@ -1,0 +1,17 @@
+<policies>
+    <inbound>
+        <base />
+        <validate-content unspecified-content-type-action="prevent" max-size="102400" size-exceeded-action="prevent" errors-variable-name="requestBodyValidation">
+            <content type="application/json" validate-as="json" action="prevent" allow-additional-properties="false" />
+        </validate-content>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
