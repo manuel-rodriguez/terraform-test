@@ -45,3 +45,8 @@ variable "api_path" {
   description = "Path of the API"
   type        = string
 }
+
+variable "product_id" {
+  description = "ID of the product"
+  type        = string
+}
