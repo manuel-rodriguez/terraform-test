@@ -138,9 +138,3 @@ resource "azurerm_api_management_product_api" "product_api" {
   api_management_name = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
 }
-
-# Import para la asociación del API al producto
-import {
-  to = azurerm_api_management_product_api.product_api
-  id = "${var.apim_id}/products/cnt/apis/${var.api_name}"
-}
