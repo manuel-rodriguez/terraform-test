@@ -35,3 +35,13 @@ variable "apim_id" {
   description = "ID of the existing API Management service"
   type        = string
 }
+
+variable "api_display_name" {
+  description = "Display name of the API"
+  type        = string
+}
+
+variable "api_path" {
+  description = "Path of the API"
+  type        = string
+}

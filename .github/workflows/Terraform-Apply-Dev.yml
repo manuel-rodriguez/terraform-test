@@ -1,0 +1,19 @@
+name: "Terraform Apply Dev"
+ 
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - api/**
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    uses: manuel-rodriguez/terraform-template/.github/workflows/terraform-workflow.yml@main
+    with:
+      cloud_organization: "Mers"
+      tf_workspace: "terraform-test"
+      config_directory: "api/"
+    secrets:
+      tf_api_token: ${{ secrets.TF_API_TOKEN }} 
