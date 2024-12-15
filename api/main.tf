@@ -122,11 +122,11 @@ import {
 # Import para la política a nivel API
 import {
   to = azurerm_api_management_api_policy.cors_policy
-  id = "${var.apim_id}/apis/${var.api_name}/policies/policy"
+  id = "${var.apim_id}/apis/${var.api_name}"
 }
 
 # Import para la política a nivel operación
 import {
   to = azurerm_api_management_api_operation_policy.put_operation_policy
-  id = "${var.apim_id}/apis/${var.api_name}/operations/putUpdateFeaturesProcessing/policies/policy"
+  id = "${var.apim_id}/apis/${var.api_name}/operations/putUpdateFeaturesProcessing"
 }
