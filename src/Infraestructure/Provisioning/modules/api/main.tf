@@ -23,7 +23,7 @@ resource "azurerm_api_management_api" "service_api" {
   
   import {
     content_format = "openapi"
-    content_value  = file(var.openapi_spec_path)
+    content_value  = file("${path.module}/${var.openapi_spec_path}")
   }
 
   oauth2_authorization {
