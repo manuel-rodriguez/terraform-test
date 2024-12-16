@@ -14,6 +14,7 @@ resource "azurerm_api_management_api" "service_api" {
   path                = var.api_path 
   protocols           = ["https"]
   service_url         = var.backend_service_url
+  url_suffix          = var.url_suffix
   subscription_required = true
   
   subscription_key_parameter_names {
