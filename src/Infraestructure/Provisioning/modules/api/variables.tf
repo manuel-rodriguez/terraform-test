@@ -50,3 +50,8 @@ variable "product_id" {
   description = "ID of the product"
   type        = string
 }
+
+variable "url_suffix" {
+  type        = string
+  description = "URL suffix for the API"
+}
