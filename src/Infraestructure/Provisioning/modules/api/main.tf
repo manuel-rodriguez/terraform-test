@@ -15,7 +15,6 @@ resource "azurerm_api_management_api" "service_api" {
   protocols           = ["https"]
   service_url         = var.backend_service_url
   subscription_required = true
-  api_type            = "http"
   
   subscription_key_parameter_names {
     header = "x-Gateway-APIKey"
@@ -31,7 +30,6 @@ resource "azurerm_api_management_api" "service_api" {
     authorization_server_name = "oauth-mers"
   }
 
-  service_url = "${var.backend_service_url}${var.url_suffix}"
 }
 
 # Backend Configuration with lifecycle ignore_changes
