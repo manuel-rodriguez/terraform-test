@@ -1,0 +1,197 @@
+# *************************************
+## Definir todos los objetos comunes ##
+# *************************************
+
+GisProcessingRequest:
+  type: object
+  required:
+    - objectId
+    - locationId
+    - name
+    - propertyNumber
+    - incidentNumber
+    - street
+    - number
+    - neighborhoodId
+    - betweenStreets
+    - city
+    - cityId
+    - state
+    - stateId
+    - postalCode
+    - departmentId
+    - locationCRGIS
+    - ageb
+  properties:
+    objectId:
+      type: number
+    locationId:
+      type: number
+      minLength: 1
+      maxLength: 6
+      pattern: '^[0-9]*$'
+    name:
+      type: string
+      minLength: 1
+      maxLength: 50
+      pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
+      description: Nombre de la operación
+    propertyNumber:
+      type: string
+      minLength: 1
+      maxLength: 15
+      pattern: '^[A-Za-z0-9]*$'
+      description: Identificador numérico de la propiedad
+    incidentNumber:
+      type: number
+      nullable: false
+    street:
+      type: string
+      minLength: 1
+      maxLength: 500
+      pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
+      description: Campo que indica el nombre de la calle
+    number:
+      type: string
+      minLength: 1
+      maxLength: 50
+      pattern: '^[0-9]*$'
+      description: Campo para el número de calle
+    neighborhoodId:
+      type: number
+      minLength: 1
+      maxLength: 5
+      pattern: '^[0-9]*$'
+      description: Identificador del número de colonia
+    betweenStreets:
+      type: string
+      minLength: 1
+      maxLength: 500
+      pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
+      description: Campo de que describe entre que calles se encuntra la propiedad
+    city:
+      type: string
+      minLength: 1
+      maxLength: 400
+      pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
+      description: Nombre de la ciudad o municipio
+    cityId:
+      type: string
+      minLength: 1
+      maxLength: 400
+      pattern: '^[0-9]*$'
+      description: Identificador numérico de la ciudad
+    state:
+      type: string
+      minLength: 1
+      maxLength: 400
+      pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
+      description: Estado al que pertenece la propiedad
+    stateId:  
+      type: string
+      minLength: 1
+      maxLength: 400
+      pattern: '^[0-9]*$'
+      description: Identificador numérico del estado
+    postalCode:
+      type: string
+      minLength: 1
+      maxLength: 5
+      pattern: '^[0-9]*$'
+      description: Código Postal del municipio
+    departmentId:
+      type: string
+      minLength: 1
+      maxLength: 5
+      pattern: '^[0-9A-Z]*$'
+      description: "Identificador alfanumérico del departamento (o Plaza). Es un Campo asignado al consumidor."
+      nullable: false
+    locationCRGIS:
+      type: string
+      minLength: 1
+      maxLength: 50
+      pattern: '^[0-9A-Z]*$'
+    latitud:
+      type: number
+      format: float
+      maximum: 99999999999999999999999999999999999999.99999999
+      minimum: -99999999999999999999999999999999999999.99999999
+      multipleOf: 0.000000000000001
+      description: Valor de la latitud
+    longitud:
+      type: number
+      format: float
+      maximum: 99999999999999999999999999999999999999.99999999
+      minimum: -99999999999999999999999999999999999999.99999999
+      multipleOf: 0.000000000000001
+      description: Valor de la longitud
+    ageb:
+      type: string
+      minLength: 1
+      maxLength: 13
+      description: Referencia del AGEB
+
+
+FeaturesProcessingTO:
+  type: object
+  required:
+    - code  
+    - message
+  properties:
+    code:
+      type: string
+      description: Código de Error de la operación.
+      minLength: 7
+      maxLength: 7
+      pattern: '^[XPS0-9]*$'
+      nullable: false
+    message:
+      type: string
+      description: Descripción de la operación.
+      minLength: 1
+      maxLength: 100
+      pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+      nullable: false         
+
+
+
+ErrorTO:
+  type: object
+  required:
+    - code  
+    - message
+  properties:
+    code:
+      type: string
+      description: Código de Error de la operación.
+      minLength: 7
+      maxLength: 7
+      pattern: '^[XPS0-9]*$'
+      nullable: false
+    message:
+      type: string
+      description: Descripción de la operación.
+      minLength: 1
+      maxLength: 100
+      pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+      nullable: false
+ErrorNativeTO:
+  type: object
+  required:
+    - code  
+    - message
+  properties:
+    code:
+      type: string
+      description: Código de Error de la operación.
+      minLength: 7
+      maxLength: 7
+      pattern: '^[XPS0-9]*$'
+      nullable: false
+    message:
+      type: string
+      description: Descripción de la operación.
+      minLength: 1
+      maxLength: 100
+      pattern: '^[ -00-9a-zA-Z\u00C0-\u017F]*$'
+      nullable: false

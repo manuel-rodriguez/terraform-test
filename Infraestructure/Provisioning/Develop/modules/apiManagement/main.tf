@@ -1,4 +1,5 @@
-# Add this at the beginning of your main.tf
+# Oxxo - DevSecOps - JoruneyToThecloud
+ 
 data "azurerm_api_management" "existing" {
   name                = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
@@ -23,12 +24,13 @@ resource "azurerm_api_management_api" "service_api" {
   
   import {
     content_format = "openapi"
-    content_value  = file(var.openapi_spec_path)
+    content_value  = file("${path.module}/${var.openapi_spec_path}")
   }
 
   oauth2_authorization {
-    authorization_server_name = "oauth-mers"
+    authorization_server_name = var.api_oauth_server_name
   }
+
 }
 
 # Backend Configuration with lifecycle ignore_changes
@@ -55,81 +57,22 @@ resource "azurerm_api_management_api_policy" "cors_policy" {
   api_management_name = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
 
-  xml_content = <<XML
-<policies>
-    <inbound>
-        <base />
-        <validate-content unspecified-content-type-action="prevent" max-size="102400" size-exceeded-action="prevent" errors-variable-name="requestBodyValidation">
-            <content type="application/json" validate-as="json" action="prevent" allow-additional-properties="false" />
-        </validate-content>
-    </inbound>
-    <backend>
-        <base />
-    </backend>
-    <outbound>
-        <base />
-    </outbound>
-    <on-error>
-        <base />
-    </on-error>
-</policies>
-XML
+  xml_content = templatefile("${path.module}/policies/api_policy.xml", {})
 }
 
-# Operation level policy using backend_name directly
+# Operation level policy
 resource "azurerm_api_management_api_operation_policy" "put_operation_policy" {
   api_name            = azurerm_api_management_api.service_api.name
   api_management_name = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
   operation_id        = "putUpdateFeaturesProcessing"
 
-  xml_content = <<XML
-<policies>
-    <inbound>
-        <base />
-        <set-header name="Authorization" exists-action="override">
-            <value />
-        </set-header>
-        <set-backend-service backend-id="${var.backend_name}" />
-        <rewrite-uri template="/puntopotencial" />
-        <set-method>POST</set-method>
-    </inbound>
-    <backend>
-        <base />
-    </backend>
-    <outbound>
-        <base />
-    </outbound>
-    <on-error>
-        <base />
-    </on-error>
-</policies>
-XML
+  xml_content = templatefile("${path.module}/policies/operation_policy.xml", {
+    backend_name = var.backend_name
+  })
 }
 
-# Import para el backend
-import {
-  to = azurerm_api_management_backend.service_backend
-  id = "${var.apim_id}/backends/${var.backend_name}"
-}
 
-# Import para el API
-import {
-  to = azurerm_api_management_api.service_api
-  id = "${var.apim_id}/apis/${var.api_name};rev=1"
-}
-
-# Import para la política a nivel API
-import {
-  to = azurerm_api_management_api_policy.cors_policy
-  id = "${var.apim_id}/apis/${var.api_name}"
-}
-
-# Import para la política a nivel operación
-import {
-  to = azurerm_api_management_api_operation_policy.put_operation_policy
-  id = "${var.apim_id}/apis/${var.api_name}/operations/putUpdateFeaturesProcessing"
-}
 
 # Asociación del API al producto
 resource "azurerm_api_management_product_api" "product_api" {

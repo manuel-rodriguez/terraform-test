@@ -1,0 +1,94 @@
+# **********************************************
+## Definición de códigos de estatus Genéricos ##
+# **********************************************
+400:
+  description: Unsuccessful requests
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-400-112-response.json'
+
+401:
+  description: Unauthorized
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-401-response.json'
+403:
+  description: Forbidden
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-403-response.json'
+404:
+  description: Not Found
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-404-response.json'
+405:
+  description: Method Not Allowed
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-405-response.json'
+415:
+  description: Unsupported Media Type
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-415-response.json'
+422:
+  description: Unprocessable Entity
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-422-response.json'
+429:
+  description: Too Many Requests
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-429-response.json'
+500:
+  description: Internal Server Error
+  content:
+    application/json:
+      schema:
+          $ref: '../schemas/common-library.yaml#/ErrorNativeTO'
+      examples:
+        500:
+            value:
+              $ref: '../examples/response/post-500-response.json'
+503:
+  description: Service Unavailable
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-503-response.json'
+504:
+  description: Gateway Timeout
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/common-library.yaml#/ErrorTO'
+      example:
+        $ref: '../examples/response/post-504-response.json'

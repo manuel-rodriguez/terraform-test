@@ -1,0 +1,100 @@
+# *********************************
+## Definición de Headers Comunes ##
+# *********************************
+CONTENT_TYPE:
+  in: header
+  name: Content-Type
+  schema:
+    type: string
+    example: application/json
+  required: true
+  example: application/json
+  description: Indica el tipo de contenido del recurso que se va transmitir por la petición.
+API_KEY:
+  in: header
+  name: x-Gateway-APIKey
+  schema:
+    type: string
+    format: uuid
+    example: aacb0ad9-94dc-4dbb-85d5-e03f85fd068c
+  required: true
+  example: aacb0ad9-94dc-4dbb-85d5-e03f85fd068c
+  description: identificador único que sirve para identificar a una aplicación o usuario. API Key se obtiene mediante la suscripción al API.
+AUTHORIZATION:
+  in: header
+  name: Authorization
+  schema:
+    type: string
+    example: Bearer c5652972-85c8-427c-b30c-b1c149a1ff70
+  required: true
+  example: Bearer c5652972-85c8-427c-b30c-b1c149a1ff70
+  description: Contiene la información para autenticar a un usuario en el sistema y permitirle el acceso a un recurso protegido. Token de Acceso se obtiene mediante la suscripción al API.
+TRACKING_ID:
+  in: header
+  name: Tracking-Id
+  schema:
+    type: string
+    format: uuid
+    example: 4bd9e9c2-4989-4f21-8398-ad9d19ef0f66
+  required: true
+  example: 4bd9e9c2-4989-4f21-8398-ad9d19ef0f66
+  description: Identificador único utilizado para trazabilidad de la petición.
+CHANNEL_ID:
+  in: header
+  name: Channel-Id
+  schema:
+    type: string
+    example: WEB
+    pattern: '[A-Z]'
+  required: true
+  example: WEB
+  description: Canal de consumo del servicio. Ejemplos - WEB|MOBILE|APP|POS.
+COUNTRY:
+  in: header
+  name: Country-Code
+  schema:
+    type: string
+    example: MX
+    pattern: '[A-Z]'
+  required: true
+  example: MX
+  description: País desde donde se ejecuta la petición. Ejemplos - MX|US|CO|CL|BR.
+LANGUAGE:
+  in: header
+  name: Language
+  schema:
+    type: string
+    example: SPA
+  required: true
+  example: SPA
+  description: Lenguaje soportado del contenido. Ejemplo - SPA = Español (Único soportado).
+GEOLOCATION:
+  in: header
+  name: Geolocation
+  schema:
+    type: string
+  required: false
+  description: Datos de geolocalización del dispositivo que ejecuta la petición.
+OPERATING_SYSTEM:
+  in: header
+  name: Operating-System
+  schema:
+    type: string
+  required: false
+  description: Sistema Operativo aplicado a un teléfono celular, punto de venta (POS).
+X_OTP:
+  in: header
+  name: X-OTP
+  schema:
+    type: string
+  required: false
+  description: Código OTP para Autenticación de servicios por MFA (Segundo Factor de Autenticación).
+USER_AGENT:
+  in: header
+  name: User-Agent
+  schema:
+    type: string
+    example: exampleApp/1.0
+  required: true
+  example: exampleApp/1.0 <comments>
+  description: Agente de usuario que permite a los servidores y servicios de red identificar la aplicación, sistema operativo, compañía, y/o la versión del user agent (en-US) que hace la invocación. Syntax - product / product-version comment.
