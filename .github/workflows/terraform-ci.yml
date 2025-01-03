@@ -24,7 +24,7 @@ jobs:
             ENVIRONMENT=$PATH_WORKSPACE"Production"
           elif [[ "$BRANCH_NAME" == "dev" ]]; then
             PREFIX=$SUBFIX"-test"
-            ENVIRONMENT=$PATH_WORKSPACE"Development"
+            ENVIRONMENT=$PATH_WORKSPACE"Develop"
           elif [[ "$BRANCH_NAME" == "staging" ]]; then
             PREFIX=$SUBFIX"-staging"
             ENVIRONMENT=$PATH_WORKSPACE"Staging"
