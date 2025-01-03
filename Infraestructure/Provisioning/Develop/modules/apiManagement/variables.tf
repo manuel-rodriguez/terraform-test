@@ -50,3 +50,8 @@ variable "product_id" {
   description = "ID of the product"
   type        = string
 }
+
+variable "api_oauth_server_name" {
+  description = "Name of the OAuth2 authorization server"
+  type        = string
+}

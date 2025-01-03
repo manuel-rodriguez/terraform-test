@@ -1,4 +1,5 @@
-# Add this at the beginning of your main.tf
+# Oxxo - DevSecOps - JoruneyToThecloud
+ 
 data "azurerm_api_management" "existing" {
   name                = split("/", var.apim_id)[8]
   resource_group_name = var.resource_group_name
@@ -27,7 +28,7 @@ resource "azurerm_api_management_api" "service_api" {
   }
 
   oauth2_authorization {
-    authorization_server_name = "oauth-mers"
+    authorization_server_name = var.api_oauth_server_name
   }
 
 }

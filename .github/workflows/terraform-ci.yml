@@ -1,0 +1,49 @@
+name: CI TERRAFORM BY BRANCH NAME
+on:
+  pull_request:
+    branches:
+      - "dev"
+      - "staging"
+      - "main"
+  workflow_dispatch:
+jobs:
+  set_prefix:
+    runs-on: ubuntu-latest
+    outputs:
+      prefix: ${{steps.set_prefix.outputs.prefix}}
+      environment: ${{steps.set_prefix.outputs.environment}}
+    steps:
+      - name: Validate branch and choose prefix
+        id: set_prefix
+        run: |
+          SUBFIX="terraform"
+          PATH_WORKSPACE="Infraestructure/Provisioning/"
+          BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}")
+          if [[ "$BRANCH_NAME" == "main" ]]; then
+            PREFIX=$SUBFIX"-PRD"
+            ENVIRONMENT=$PATH_WORKSPACE"Production"
+          elif [[ "$BRANCH_NAME" == "dev" ]]; then
+            PREFIX=$SUBFIX"-test"
+            ENVIRONMENT=$PATH_WORKSPACE"Development"
+          elif [[ "$BRANCH_NAME" == "staging" ]]; then
+            PREFIX=$SUBFIX"-staging"
+            ENVIRONMENT=$PATH_WORKSPACE"Staging"
+          else
+            echo "Branch not recognized. Exiting."
+            exit 1
+          fi
+          echo "Chosen prefix is: $PREFIX"
+          echo "Chosen environment is: $ENVIRONMENT"
+          echo "::set-output name=prefix::$PREFIX"
+          echo "::set-output name=environment::$ENVIRONMENT"
+
+  terraform-analysis:
+    needs:
+      - set_prefix
+    uses: manuel-rodriguez/terraform-template/.github/workflows/terraform-plan-workflow.yml@main
+    with:
+      cloud_organization: "OXXO"
+      tf_workspace: ${{ needs.set_prefix.outputs.prefix }}
+      config_directory: ${{ needs.set_prefix.outputs.environment }}
+    secrets:
+      tf_api_token: ${{ secrets.TF_API_TOKEN }}
