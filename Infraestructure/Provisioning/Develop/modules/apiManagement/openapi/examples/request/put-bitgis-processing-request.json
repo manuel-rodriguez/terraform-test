@@ -1,0 +1,21 @@
+{
+	"objectId": 1,
+	"locationId": 300000,
+	"name": "Prueba chat con Mercedes",
+	"propertyNumber": "300001",
+	"incidentNumber": 300001,
+	"street": "La Calle",
+	"number": "100",
+	"neighborhoodId": 100,
+	"betweenStreets": "Calle 1",
+	"city": "Calle 2",
+	"cityId": "10001",
+	"state": "El Estado",
+	"stateId": "10",
+	"postalCode": "10001",
+	"departmentId": "10",
+	"locationCRGIS": "PNT100",
+	"latitud": -100,
+	"longitud": 20,
+	"ageb": "10001"
+  }

@@ -1,0 +1,12 @@
+# *************************************************
+## Definición de códigos de estatus particulares ##
+# *************************************************
+FeaturesProcessingResponse:
+  200:
+    description: success
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/library.yaml#/components/responses/FeaturesProcessing'
+        example:
+          $ref: '../examples/response/put-features-processing-response.json'

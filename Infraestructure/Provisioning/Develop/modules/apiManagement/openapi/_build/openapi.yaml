@@ -18,7 +18,7 @@ info:
     3. [RFC 7231](https://datatracker.ietf.org/doc/html/rfc7231)
   version: v1
 servers:
-  - url: 'https://apimers.azure-api.net'
+  - url: 'https://oxzapmintd01.azure-api.net/cnt/v1'
     description: DEV
 security:
   - ApiKeyAuth: []
@@ -151,13 +151,13 @@ paths:
                   type: string
                   minLength: 1
                   maxLength: 50
-                  pattern: '^[A-Za-z ]*$'
+                  pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
                   description: Nombre de la operación
                 propertyNumber:
                   type: string
                   minLength: 1
                   maxLength: 15
-                  pattern: '^[0-9]*$'
+                  pattern: '^[A-Za-z0-9]*$'
                   description: Identificador numérico de la propiedad
                 incidentNumber:
                   type: number
@@ -166,7 +166,7 @@ paths:
                   type: string
                   minLength: 1
                   maxLength: 500
-                  pattern: '^[A-Za-z0-9 ]*$'
+                  pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
                   description: Campo que indica el nombre de la calle
                 number:
                   type: string
@@ -184,13 +184,13 @@ paths:
                   type: string
                   minLength: 1
                   maxLength: 500
-                  pattern: '^[A-Za-z0-9/ ]*$'
+                  pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
                   description: Campo de que describe entre que calles se encuntra la propiedad
                 city:
                   type: string
                   minLength: 1
                   maxLength: 400
-                  pattern: '^[A-Za-z0-9 ]*$'
+                  pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
                   description: Nombre de la ciudad o municipio
                 cityId:
                   type: string
@@ -202,7 +202,7 @@ paths:
                   type: string
                   minLength: 1
                   maxLength: 400
-                  pattern: '^[A-Za-z0-9 ]*$'
+                  pattern: '^[A-Za-z0-9áéíóúÁÉÍÓÚüÜ|,./ _ñÑ]*$'
                   description: Estado al que pertenece la propiedad
                 stateId:
                   type: string
@@ -233,14 +233,14 @@ paths:
                   format: float
                   maximum: 1e+38
                   minimum: -1e+38
-                  multipleOf: 1.e-8
+                  multipleOf: 1.e-15
                   description: Valor de la latitud
                 longitud:
                   type: number
                   format: float
                   maximum: 1e+38
                   minimum: -1e+38
-                  multipleOf: 1.e-8
+                  multipleOf: 1.e-15
                   description: Valor de la longitud
                 ageb:
                   type: string
